@@ -1,12 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_google_street_view/flutter_google_street_view.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:refugees_help/screens/education_screen.dart';
 import 'package:refugees_help/screens/job_screen.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:refugees_help/screens/Service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:ui';
+
+import 'RestaurantsPage.dart';
 
 class data {
   @required
@@ -49,65 +52,85 @@ class _city_screen extends State<city_screen> {
   var selectedPage = 1;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: const Color.fromARGB(255, 119, 119, 119),
-        extendBody: true,
-        body: const main_city_screen(),
-        bottomNavigationBar: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(50)),
-            border: Border.all(
-                color: const Color(0xff171817).withOpacity(0.05), width: 3),
-            color: Colors.transparent,
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xff171817).withOpacity(0.2),
-                spreadRadius: 5,
-                blurRadius: 0,
-                offset: const Offset(0, 0),
-              ),
-            ],
-          ),
-          child: BlurEffect(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      setState(() {
-                        selectedPage = 0;
-                      });
-                    },
-                    icon: Icon(
-                      Icons.bookmarks_outlined,
-                      size: 20,
-                      color: Color(selectedPage == 0 ? 0xFFE8E5E1 : 0xFF92918D),
-                    )),
-                CircleAvatar(
-                  radius: 20,
-                  child: ClipOval(
-                    child: Image.asset('images/pfp.jpeg', scale: 1),
-                  ),
-                ),
-                IconButton(
-                    onPressed: () {
-                      setState(() {
-                        selectedPage = 1;
-                      });
-                    },
-                    icon: Icon(
-                      Icons.home_filled,
-                      size: 20,
-                      color: Color(selectedPage == 1 ? 0xFFE8E5E1 : 0xFF92918D),
-                    )),
-              ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Text(
+            "اكتشف المدينة",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
-        ));
+          leading: BackButton(
+            color: Colors.black54,
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+          backgroundColor: const Color.fromARGB(255, 212, 215, 222),
+          extendBody: true,
+          body: const main_city_screen(),
+          bottomNavigationBar: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(50)),
+              border: Border.all(
+                  color: const Color(0xff3c4a50).withOpacity(0.9), width: 3),
+              color: Colors.transparent,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xff3c4a50),
+                  spreadRadius: 5,
+                  blurRadius: 0,
+                  offset: const Offset(0, 0),
+                ),
+              ],
+            ),
+            child: BlurEffect(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          selectedPage = 0;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.bookmarks_outlined,
+                        size: 30,
+                        color: Color(selectedPage == 0 ? 0xFFE8E5E1 : 0xffD4D7DEFF ),
+                      )),
+                  CircleAvatar(
+                    radius: 20,
+                    child: ClipOval(
+                      child: Image.asset('images/pfp.jpeg', scale: 1),
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        setState(() {
+                          selectedPage = 1;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.home_filled,
+                        size: 30,
+                        color: Color(selectedPage == 1 ?  0xFFE8E5E1 :  0xffD4D7DEFF ),
+                      )),
+                ],
+              ),
+            ),
+          )),
+    );
   }
 }
 
@@ -116,123 +139,81 @@ class main_city_screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Scaffold(
-          backgroundColor: const Color.fromARGB(255, 119, 119, 119),
-          appBar: AppBar(
-            backgroundColor: Colors.grey,
-            title: Text("مدينة السادات", textAlign: TextAlign.center),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            height: 15,
+          ),
+          // Container(
+          //   child: Container(
+          //     /* decoration: BoxDecoration(
+          //           border: Border.all(
+          //             color: Colors.grey,
+          //             width: 10,
+          //           ),
+          //         ),*/
+          //     margin: EdgeInsets.all(10),
+          //     height: 300,
+          //
+          //     child: FlutterGoogleStreetView(
+          //       initPos: LatLng(37.78083, -122.40449),
+          //
+          //       initSource: StreetViewSource.outdoor,
+          //       initBearing: 30,
+          //       initTilt: 30,
+          //       initZoom: 1.5,
+          //       onStreetViewCreated: (controller) async {
+          //         controller.animateTo(
+          //             duration: 50,
+          //             camera: StreetViewPanoramaCamera(
+          //                 bearing: 15, tilt: 10, zoom: 3));
+          //       },
+          //     ),
+          //   ),
+          // ),
+          Padding(
+            padding: EdgeInsets.only(
+                right: 20), //apply padding to all four sides
+            child: Text(
+              'اعرف اكتر عن',
+              textDirection: TextDirection.rtl,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
           ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: 15,
+          Container(
+            width: 370,
+            height: 250,
+            margin: EdgeInsets.all(5),
+            child: CarouselSlider(
+              items: optionPostersList(),
+              options: CarouselOptions(
+                height: 250,
+                padEnds: false,
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                reverse: false,
+                autoPlay: true,
+                autoPlayInterval: const Duration(seconds: 3),
+                autoPlayAnimationDuration:
+                const Duration(milliseconds: 800),
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enlargeCenterPage: true,
+                enlargeFactor: 0.3,
+                scrollDirection: Axis.horizontal,
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                    right: 20), //apply padding to all four sides
-                child: Text(
-                  'اكتشف المدينة',
-                  textDirection: TextDirection.rtl,
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Container(
-                child: Container(
-                  /* decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 10,
-                    ),
-                  ),*/
-                  margin: EdgeInsets.all(10),
-                  height: 300,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Colors.grey,
-                      style: BorderStyle.solid,
-                      width: 10,
-                    ),
-                  ),
-                  child: FlutterGoogleStreetView(
-                    initPos: LatLng(25.07808902, 121.5005234),
-                    initSource: StreetViewSource.outdoor,
-                    initBearing: 30,
-                    initTilt: 30,
-                    initZoom: 1.5,
-                    onStreetViewCreated: (controller) async {
-                      controller.animateTo(
-                          duration: 50,
-                          camera: StreetViewPanoramaCamera(
-                              bearing: 15, tilt: 10, zoom: 3));
-                    },
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    right: 20), //apply padding to all four sides
-                child: Text(
-                  'اعرف اكتر عن',
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      // Handle the click event here
-                    },
-                    child: Container(
-                      width: 370,
-                      height: 250,
-                      margin: EdgeInsets.all(5),
-                      child: CarouselSlider(
-                        items: optionPostersList(),
-                        options: CarouselOptions(
-                          height: 250,
-                          padEnds: false,
-                          initialPage: 0,
-                          enableInfiniteScroll: true,
-                          reverse: false,
-                          autoPlay: true,
-                          autoPlayInterval: const Duration(seconds: 3),
-                          autoPlayAnimationDuration:
-                              const Duration(milliseconds: 800),
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          enlargeCenterPage: true,
-                          enlargeFactor: 0.3,
-                          scrollDirection: Axis.horizontal,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
-        ),
+          const SizedBox(
+            height: 100,
+          ),
+        ],
+
       ),
     );
   }
@@ -241,7 +222,7 @@ class main_city_screen extends StatelessWidget {
     List<Widget> posters = [];
     for (var i = 0; i < optionPosterAssets.length; i++) {
       posters.add(optionsPoster(
-          title: optionPosterDescriptions[i], image: optionPosterAssets[i]));
+        index: i,));
     }
     return posters;
   }
@@ -250,16 +231,30 @@ class main_city_screen extends StatelessWidget {
 class optionsPoster extends StatelessWidget {
   const optionsPoster({
     super.key,
-    required this.title,
-    required this.image,
+    required this.index,
   });
 
-  final String title;
-  final String image;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: (){
+        switch(index){
+          case 0:
+            Navigator.push(context, MaterialPageRoute(builder: (context) => education_screen()));
+            break;
+          case 1:
+            Navigator.push(context, MaterialPageRoute(builder: (context) => job_screen()));
+            break;
+          case 2:
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> Service()));
+            break;
+          case 3:
+            Navigator.push(context, MaterialPageRoute(builder: (context) => RestaurantsPage()));
+
+        }
+      },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ClipRRect(
@@ -268,7 +263,7 @@ class optionsPoster extends StatelessWidget {
             SizedBox(
               height: 250,
               child: Image.asset(
-                image,
+                optionPosterAssets[index],
                 fit: BoxFit.cover,
               ),
             ),
@@ -287,7 +282,7 @@ class optionsPoster extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: Text(
-                    title,
+                    optionPosterDescriptions[index],
                     style: const TextStyle(
                         color: Colors.white,
                         fontSize: 22,

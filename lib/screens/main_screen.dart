@@ -1,11 +1,16 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:refugees_help/charts/cities_chart.dart';
+import 'package:refugees_help/charts/countries_chart.dart';
+import 'package:refugees_help/main.dart';
+import 'package:refugees_help/screens/JobDescription.dart';
 import 'package:refugees_help/screens/city_screen.dart';
+import 'package:refugees_help/screens/job_screen.dart';
+import 'package:refugees_help/screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -13,14 +18,48 @@ class MainScreen extends StatefulWidget {
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
+var user = Hive.box('users').get(loggedUser);
 
 class _MainScreenState extends State<MainScreen> {
   var selectedPage = 1;
   @override
+  void initState() {
+    super.initState();
+    if(user['profilePhoto']==null){
+      user['profilePhoto'] = 'assets/images/pfp.webp';
+    }
+  }
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          backgroundColor: const Color.fromARGB(255, 119, 119, 119),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: RichText(
+            text: TextSpan(
+              style: TextStyle(
+                fontSize: 38,
+                fontFamily: 'Massir'
+              ),
+              children: [
+                TextSpan(
+                  text: "مرحبا في ",
+                  style: TextStyle(
+                      color: Colors.black87,
+                  ),
+                ),
+                TextSpan(
+                  text: "بيتك!",
+                  style: TextStyle(
+                      color: Colors.blue,
+                  ),
+                ),
+              ]
+            ),
+          )
+        ),
+          backgroundColor: const Color.fromARGB(255, 212, 215, 222),
           extendBody: true,
           body: selectedPage == 1?const Home():const SavedItems(),
           bottomNavigationBar: Container(
@@ -29,12 +68,12 @@ class _MainScreenState extends State<MainScreen> {
             margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(50)),
-              border: Border.all(
-                  color: const Color(0xff171817).withOpacity(0.05), width: 3),
+              // border: Border.all(
+              //     color: const Color(0xff3c4a50).withOpacity(0.9), width: 3),
               color: Colors.transparent,
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xff171817).withOpacity(0.2),
+                  color: const Color(0xff3c4a50).withOpacity(0.7),
                   spreadRadius: 5,
                   blurRadius: 0,
                   offset: const Offset(0, 0),
@@ -54,15 +93,25 @@ class _MainScreenState extends State<MainScreen> {
                       },
                       icon: Icon(
                         Icons.bookmarks_outlined,
-                        size: 20,
-                        color:Color(selectedPage == 0? 0xFFE8E5E1: 0xFF92918D),
+                        size: 30,
+                        color: Color(selectedPage == 0 ? 0xFFE8E5E1 : 0xffD4D7DEFF ),
                       )),
-                  CircleAvatar(
+            GestureDetector(
+              onTap: (){
+                setState(() {
+
+                });
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileScreen()));
+              },
+                  child: CircleAvatar(
                     radius: 20,
                     child: ClipOval(
-                      child: Image.asset('images/pfp.jpeg', scale: 1),
+                      child: user['profilePhoto'] == 'assets/images/pfp.webp' ? Image.asset(user['profilePhoto'],fit: BoxFit.cover,)
+                          : Image.file(File(user['profilePhoto']),fit: BoxFit.cover,),
                     ),
+
                   ),
+            ),
                   IconButton(
                       onPressed: () {
                         setState(() {
@@ -71,8 +120,8 @@ class _MainScreenState extends State<MainScreen> {
                       },
                       icon: Icon(
                         Icons.home_filled,
-                        size: 20,
-                        color: Color(selectedPage == 1? 0xFFE8E5E1: 0xFF92918D),
+                        size: 30,
+                        color: Color(selectedPage == 1 ?  0xFFE8E5E1:  0xffD4D7DEFF ),
                       )),
                 ],
               ),
@@ -115,7 +164,7 @@ List popularIdioms = [
   Idiom(phrase: 'عَلاولَه - تملي', explanation: 'دائما'),
   Idiom(phrase: 'شفتشي', explanation: 'ألوان زاهية'),
   Idiom(phrase: 'عفارم - براوة', explanation: 'لفظ اطراء بمعنى أحسنت'),
-  Idiom(phrase: 'أونطجي - بلهاموطي', explanation: 'مخادع'),
+  Idiom(phrase: 'أونطجي', explanation: 'مخادع'),
   Idiom(phrase: 'سُك', explanation: 'أغلق'),
   Idiom(phrase: 'لُكلُك', explanation: 'ثرثرة'),
   Idiom(phrase: 'لكلاك - رغاي', explanation: 'كثير الكلام'),
@@ -154,6 +203,17 @@ class _HomeState extends State<Home> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          SizedBox(height: 30,),
+          Container(
+            alignment: Alignment.topRight,
+            margin: EdgeInsets.only(right: 20),
+            child: Text("اهم الفرص", style: TextStyle(
+              color: Colors.black,
+              fontSize: 25,
+              fontWeight: FontWeight.w200,
+
+            ),),
+          ),
           CarouselSlider(
             items: jobPostersList(),
             options: CarouselOptions(
@@ -172,7 +232,17 @@ class _HomeState extends State<Home> {
             ),
           ),
           const SizedBox(
-            height: 16,
+            height: 30,
+          ),
+          Container(
+            alignment: Alignment.topRight,
+            margin: EdgeInsets.only(right: 20),
+            child: Text("المدن", style: TextStyle(
+              color: Colors.black,
+              fontSize: 25,
+              fontWeight: FontWeight.w200,
+
+            ),),
           ),
           SizedBox(
             height: 300,
@@ -186,14 +256,27 @@ class _HomeState extends State<Home> {
             ),
           ),
           const SizedBox(
-            height: 8,
+            height: 30,
+          ),
+          SizedBox(
+            height: 300,
+            width: 300,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  CountriesPieChart(),
+                  CitiesPieChart(),
+                ],
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
             child: Container(
               padding: const EdgeInsets.all(16.0),
               decoration: const BoxDecoration(
-                color: Color(0xff171817),
+                color: Color(0xff3c4a50),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
               child: GestureDetector(
@@ -226,26 +309,26 @@ class _HomeState extends State<Home> {
           const SizedBox(height: 16),
           isDropdownOpen
               ? Column(
-                children: [
-                  IdiomCard(idiom: popularIdioms[0]),
-                  IdiomCard(idiom: popularIdioms[1]),
-                  IdiomCard(idiom: popularIdioms[2]),
-                  IdiomCard(idiom: popularIdioms[3]),
-                  TextButton(
-                      onPressed: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const IdiomsPage(),));
-                      },
-                      child: const Text(
-                        "المزيد",
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w200,
-                        ),
-                      ),
+            children: [
+              IdiomCard(idiom: popularIdioms[0]),
+              IdiomCard(idiom: popularIdioms[1]),
+              IdiomCard(idiom: popularIdioms[2]),
+              IdiomCard(idiom: popularIdioms[3]),
+              TextButton(
+                onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const IdiomsPage(),));
+                },
+                child: const Text(
+                  "المزيد",
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w200,
                   ),
-                ],
-              )
+                ),
+              ),
+            ],
+          )
               : Container(),
           const SizedBox(
             height: 100,
@@ -275,14 +358,19 @@ class IdiomsPage extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.black54,
         foregroundColor: Colors.white70,
+        leading: BackButton(
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       backgroundColor: Colors.white54,
       body: Padding(
         padding: const EdgeInsets.only(top: 16.0),
         child: ListView.builder(
           shrinkWrap: true,
-            itemCount: popularIdioms.length,
-            itemBuilder: (context, index) => IdiomCard(idiom: popularIdioms[index]),
+          itemCount: popularIdioms.length,
+          itemBuilder: (context, index) => IdiomCard(idiom: popularIdioms[index]),
         ),
       ),
     );
@@ -304,8 +392,8 @@ class _IdiomCardState extends State<IdiomCard> {
   final Idiom idiom;
 
   _IdiomCardState(
-    this.idiom,
-  );
+      this.idiom,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -332,7 +420,7 @@ class _IdiomCardState extends State<IdiomCard> {
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w400,
-                      color: Colors.white,
+                      color: Colors.black54,
                     ),
                   ),
                 ],
@@ -342,13 +430,13 @@ class _IdiomCardState extends State<IdiomCard> {
               ),
               isCardShown
                   ? Text(
-                      idiom.explanation,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white,
-                      ),
-                    )
+                idiom.explanation,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black54,
+                ),
+              )
                   : Container(),
             ],
           ),
@@ -415,7 +503,7 @@ class CityPoster extends StatelessWidget {
   }
 
   openCity(BuildContext context,String name) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const city_screen(),));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const city_screen(),));
   }
 
   saveCity(BuildContext context, String name) {
@@ -431,7 +519,7 @@ class CityPoster extends StatelessWidget {
                 box.delete(name);
               },
                 icon: const Icon(Icons.undo,color: Colors.black54,),
-                  iconSize: 20,
+                iconSize: 20,
               ),
             ],
           ),
@@ -497,33 +585,11 @@ class JobPoster extends StatelessWidget {
   }
 
   openJob(BuildContext context,String description) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const Placeholder(),));
-  }
-
-  saveJob(BuildContext context,String imageAsset, String description) {
-    var box = Hive.box('saved_jobs');
-    box.put(imageAsset,description);
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("تم الحفظ",style: TextStyle(color: Colors.black54),),
-              IconButton(onPressed: (){
-                box.delete(imageAsset);
-              },
-                icon: const Icon(Icons.undo,color: Colors.black54,),
-                iconSize: 20,
-              ),
-            ],
-          ),
-          duration: const Duration(seconds: 2),
-          backgroundColor: Colors.white,
-          dismissDirection: DismissDirection.horizontal,
-        )
-    );
+    showModalBottomSheet(context: context, builder: (context) => JobDescription(imageAsset: imageAsset, title: description, details: description, requirements: '', contact: ''),);
   }
 }
+
+
 
 class BlurEffect extends StatelessWidget {
   const BlurEffect({super.key, this.child});
@@ -576,9 +642,9 @@ class _SavedItemsState extends State<SavedItems> {
           const Padding(
             padding: EdgeInsets.only(right: 16.0,top: 12.0),
             child: Text(
-                "المدن المحفوظة",
+              "المدن المحفوظة",
               style: TextStyle(
-                  fontSize: 24,
+                fontSize: 24,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
@@ -589,45 +655,45 @@ class _SavedItemsState extends State<SavedItems> {
             child: ListView.builder(
               itemCount: cities.length,
               itemBuilder: (context, index) => Stack(
-                  children: [
-                    buildCity(cities.toList()[index]),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: IconButton(
-                        onPressed: (){
-                          setState(() {
-                            var removed = cities.toList()[index];
-                            cityBox.delete(removed);
-                            cities.remove(removed);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text("تم الحذف",style: TextStyle(color: Colors.black54),),
-                                      IconButton(onPressed: (){
-                                        setState(() {
-                                          cityBox.put(removed, '');
-                                          cities.add(removed);
-                                        });
+                children: [
+                  buildCity(cities.toList()[index]),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      onPressed: (){
+                        setState(() {
+                          var removed = cities.toList()[index];
+                          cityBox.delete(removed);
+                          cities.remove(removed);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text("تم الحذف",style: TextStyle(color: Colors.black54),),
+                                    IconButton(onPressed: (){
+                                      setState(() {
+                                        cityBox.put(removed, '');
+                                        cities.add(removed);
+                                      });
 
-                                      },
-                                        icon: const Icon(Icons.undo,color: Colors.black54,),
-                                        iconSize: 20,
-                                      ),
-                                    ],
-                                  ),
-                                  duration: const Duration(seconds: 2),
-                                  backgroundColor: Colors.white,
-                                  dismissDirection: DismissDirection.horizontal,
-                                )
-                            );
-                          });
-                        },
-                        icon: const Icon(Icons.close,color: Colors.white,),
-                      ),
-                    )
-                  ],
+                                    },
+                                      icon: const Icon(Icons.undo,color: Colors.black54,),
+                                      iconSize: 20,
+                                    ),
+                                  ],
+                                ),
+                                duration: const Duration(seconds: 2),
+                                backgroundColor: Colors.white,
+                                dismissDirection: DismissDirection.horizontal,
+                              )
+                          );
+                        });
+                      },
+                      icon: const Icon(Icons.close,color: Colors.white,),
+                    ),
+                  )
+                ],
               ),
               scrollDirection: Axis.horizontal,
             ),
@@ -636,7 +702,7 @@ class _SavedItemsState extends State<SavedItems> {
           const Padding(
             padding: EdgeInsets.only(right: 16.0,top: 12.0),
             child: Text(
-                "الوظائف المحفوظة",
+              "الوظائف المحفوظة",
               style: TextStyle(
                 fontSize: 24,
                 color: Colors.white,

@@ -80,9 +80,7 @@ class education_screen_sub2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MySub2(),
-    );
+    return MySub2();
   }
 }
 class MySub2 extends StatefulWidget {
@@ -94,25 +92,26 @@ class MySub2 extends StatefulWidget {
 class _MySub2 extends State<MySub2>{
   Widget build(BuildContext context) {
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
+    return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('الكليات المتاحة في جامعة مدينة السادات'),
-          backgroundColor: Colors.grey,
-          centerTitle: true,
-          leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const education_screen_sub21()),
-                );
-              }
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Text(
+            "جامعة مدينة السادات",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          leading: BackButton(
+            color: Colors.black54,
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
           ),
         ),
-
         backgroundColor: Color(0xffEFECE7),
         body: Container(
           margin: EdgeInsets.all(10),
@@ -121,7 +120,8 @@ class _MySub2 extends State<MySub2>{
               separatorBuilder: (context,index)=>SizedBox(height:15,)
               , itemCount: college.length),
         ),
-      ),);
+      ),
+    );
   }
 }
 
@@ -131,33 +131,35 @@ Widget buildCount(data d,BuildContext context){
     child:
     Card(
       //color: Color(0xffCCC8BF),
-      color: Colors.grey[400],
+      color: Color(0xff3c4a50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
       ),
-  child: ListTile (
+      child: ListTile (
 
           leading: CircleAvatar(
             //  radius: 48, // Image radius
             backgroundImage: AssetImage("${d.collegeImg}"),
             backgroundColor: Colors.white,
           ),
-          title:  Text("${d.collegeName}",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,),),
+          title:  Text("${d.collegeName}",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,color: Colors.white),),
           trailing: ElevatedButton(
-            child: Text('تفاصيل',style: TextStyle(fontSize: 12),),
+            child: Text('تفاصيل',style: TextStyle(fontSize: 12,fontWeight: FontWeight.w900),),
             style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.black, backgroundColor: Colors.grey.shade400,
+              foregroundColor: Colors.black, backgroundColor: Color(0xffEFECE7),
               shape: StadiumBorder(),
             ),
             onPressed: () {
-              showModalBottomSheet(context: context, builder:(context)=>d.collegeScreen );
-
-
+              showModalBottomSheet(
+                  backgroundColor: Colors.transparent,
+                  context: context, builder:
+                  (context)=>d.collegeScreen);
+              //getindx(d.schoolName);
             },
             //_navigateToNextScreen(context);
           )
-  ),
       ),
+    ),
 
   );
 }
@@ -175,17 +177,23 @@ class details extends StatelessWidget {
 
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("عرض المزيد"),
-          backgroundColor: Colors.grey,
-          centerTitle: true,
-          toolbarHeight: 40,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFFE8E5E1),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+
+          ),
         ),
-        body: Container(
+        child: Scaffold(
+
+          body: Container(
+
             margin: EdgeInsets.all(10),
             child:buildCount2(college[dataIndex], context),
 
+          ),
         ),
       ),
     );
@@ -197,6 +205,12 @@ Widget buildCount2(data d,BuildContext context){
   return SingleChildScrollView(
     child: Column(
       children: [
+        SizedBox(height: 10,),
+        Container(
+            height: 5,
+            width: 60,
+            color: Color(0xff9cb5bc).withOpacity(0.99)
+        ),
         ListTile (
           leading: CircleAvatar(
             //  radius: 48, // Image radius
@@ -204,7 +218,7 @@ Widget buildCount2(data d,BuildContext context){
             backgroundImage: AssetImage("${d.collegeImg}"),
           ),
           title:  Text("${d.collegeName}\n ${d.collegeNameE}",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,),),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,color: Colors.black),),
         ),
         SizedBox(height: 20,),
         SizedBox(height: 40,),

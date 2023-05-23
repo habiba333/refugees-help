@@ -47,9 +47,7 @@ class education_screen_sub22 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MySub22(),
-    );
+    return MySub22();
   }
 }
 class MySub22 extends StatefulWidget {
@@ -61,36 +59,29 @@ class MySub22 extends StatefulWidget {
 class _MySub22 extends State<MySub22>{
   Widget build(BuildContext context) {
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('الكليات المتاحة في الجامعة المصرية للتعلم الإلكتروني الأهلية',
-            style: TextStyle(fontSize: 15),),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const education_screen_sub21()),
-              );
-            }
-          ),
-          backgroundColor: Colors.grey,
-          centerTitle: true,
-
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('الجامعة المصرية للتعلم الإلكتروني الأهلية',
+          style: TextStyle(fontSize: 15),),
+        leading: BackButton(
+          onPressed: (){
+            Navigator.pop(context);
+          },
         ),
+        backgroundColor: Colors.grey,
+        centerTitle: true,
 
-        backgroundColor: Color(0xffEFECE7),
-        body: Container(
-          margin: EdgeInsets.all(10),
-          child: ListView.separated(
-              itemBuilder: (context,index)=>buildCount(college[index], context),
-              separatorBuilder: (context,index)=>SizedBox(height:15,)
-              , itemCount: college.length),
-        ),
-      ),);
+      ),
+
+      backgroundColor: Color(0xffEFECE7),
+      body: Container(
+        margin: EdgeInsets.all(10),
+        child: ListView.separated(
+            itemBuilder: (context,index)=>buildCount(college[index], context),
+            separatorBuilder: (context,index)=>SizedBox(height:15,)
+            , itemCount: college.length),
+      ),
+    );
   }
 }
 
@@ -134,19 +125,16 @@ class details extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("تفاصيل"),
-          backgroundColor: Colors.grey,
-          centerTitle: true,
-          toolbarHeight: 40,
-        ),
-        body: Container(
-            margin: EdgeInsets.all(10),
-            child:buildCount2(college[dataIndex], context)
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("تفاصيل"),
+        backgroundColor: Colors.grey,
+        centerTitle: true,
+        toolbarHeight: 40,
+      ),
+      body: Container(
+          margin: EdgeInsets.all(10),
+          child:buildCount2(college[dataIndex], context)
       ),
     );
   }

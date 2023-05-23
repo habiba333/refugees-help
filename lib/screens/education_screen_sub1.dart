@@ -145,9 +145,7 @@ class education_screen_sub1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MySub1(),
-    );
+    return MySub1();
   }
 }
 class MySub1 extends StatefulWidget {
@@ -158,18 +156,28 @@ class MySub1 extends StatefulWidget {
 }
 class _MySub1 extends State<MySub1> {
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
+    return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text('المدارس'),
-          backgroundColor: Colors.grey,
-          centerTitle: true,
-
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Text(
+            "المدارس",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          leading: BackButton(
+            color: Colors.black54,
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+          ),
         ),
         backgroundColor: Color(0xffEFECE7),
         body: Container(
-
           margin: EdgeInsets.all(10),
           child: ListView.separated(
               itemBuilder: (context, index) =>
@@ -177,7 +185,8 @@ class _MySub1 extends State<MySub1> {
               separatorBuilder: (context, index) => SizedBox(height: 15,)
               , itemCount: school.length),
         ),
-      ),);
+      ),
+    );
   }
   calling()async{
     const url= 'tel:+201025027368';
@@ -208,38 +217,40 @@ Widget buildCount(data d,BuildContext context){
     child: Column(
 
       children:[
-      //decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),),
-      Card(
-        //color: Color(0xffCCC8BF),
-        color: Colors.grey[400],
-        shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: ListTile (
+        //decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),),
+        Card(
+          //color: Color(0xffCCC8BF),
+          color: Color(0xff3c4a50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: ListTile (
             leading: CircleAvatar(
-             radius: 25, // Image radius
-            backgroundImage: AssetImage("${d.schoolImg}"),
-            backgroundColor: Colors.white,
+              radius: 25, // Image radius
+              backgroundImage: AssetImage("${d.schoolImg}"),
+              backgroundColor: Colors.white,
             ),
             title:  Text("${d.schoolName}",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.white),
             ),
             trailing: ElevatedButton(
-              child: Text('تفاصيل',style: TextStyle(fontSize: 12),),
+              child: Text('تفاصيل',style: TextStyle(fontSize:13,fontWeight: FontWeight.w900,),),
               style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.black, backgroundColor: Colors.grey.shade400,
+                foregroundColor: Colors.black, backgroundColor: Color(0xffEFECE7),
                 shape: StadiumBorder(),
               ),
               onPressed: () {
-                showModalBottomSheet(context: context, builder:(context)=>d.schoolScreen );
-
+                showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    context: context, builder:
+                    (context)=>d.schoolScreen);
                 //getindx(d.schoolName);
               },
               //_navigateToNextScreen(context);
             ),
-      ),
-      ),
-    ],
+          ),
+        ),
+      ],
     ),
   );
 }
@@ -252,47 +263,54 @@ class details extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("تفاصيل"),
-          backgroundColor: Colors.grey,
-          centerTitle: true,
-          toolbarHeight: 40,
-        ),
-        backgroundColor: Color(0xffEFECE7),
-        body: Container(
-          margin: EdgeInsets.all(10),
-    child: buildCount2(school[dataIndex], context),
+    return Scaffold(
+     
+      backgroundColor: Color(0xffEFECE7).withOpacity(0),
+      body: Container(
+        child: buildCount2(school[dataIndex], context),
 
-        ),
       ),
     );
   }
 }
 
 Widget buildCount2(data d,BuildContext context){
-  return SingleChildScrollView(
+  return Container(
+
+    decoration: const BoxDecoration(
+      color: Color(0xFFE8E5E1),
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(30),
+        topRight: Radius.circular(30),
+
+      ),
+    ),
+
     child: Column(
       children: [
+        SizedBox(height: 10,),
+        Container(
+            height: 5,
+            width: 60,
+            color: Color(0xff9cb5bc).withOpacity(0.99)
+        ),
         SizedBox(height: 20,),
         Card(
-          color: Colors.grey.shade400,
-      shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20.0),
+          color: Color(0xff3c4a50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
 
-    ),
-       child: ListTile (
-              leading: CircleAvatar(
-                  radius: 25, // Image radius
-                backgroundColor: Colors.white,
-                backgroundImage: AssetImage("${d.schoolImg}"),
-              ),
-              title:  Text("${d.schoolName}\n ${d.schoolNameE}",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,),),
-              trailing: Text("${d.schoolType}",style: TextStyle(color: Colors.grey[700], fontSize: 14,),),
-              ),
-      ),
+          ),
+          child: ListTile (
+            leading: CircleAvatar(
+              radius: 25, // Image radius
+              backgroundColor: Colors.white,
+              backgroundImage: AssetImage("${d.schoolImg}"),
+            ),
+            title:  Text("${d.schoolName}\n ${d.schoolNameE}",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14,color: Colors.white),),
+            trailing: Text("${d.schoolType}",style: TextStyle(color: Colors.white, fontSize: 14,),),
+          ),
+        ),
         SizedBox(height: 40,),
         Row(
             children:[
@@ -320,7 +338,7 @@ Widget buildCount2(data d,BuildContext context){
             children:[
               IconButton(
                 onPressed: (){
-                  },
+                },
                 icon: Icon(Icons.location_on),
               ),
               Text("${d.addressURL}"),
